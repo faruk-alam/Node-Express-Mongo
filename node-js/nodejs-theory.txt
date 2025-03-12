@@ -320,3 +320,205 @@ You will see the following output in the console:
 C:\Desktop\NodeJSTut\grandParentFolder\parentFolder\child.txt
 The same is applicable to a macOS or a Linux user. It's just the difference in the absolute path of the 
 present working directory and the path separator.
+
+The FS Module
+This module helps you with file handling operations such as:
+
+Reading a file (sync or async way)
+Writing to a file (sync or async way)
+Deleting a file
+Reading the contents of a director
+Renaming a file
+Watching for changes in a file, and much more
+Let's perform some of these tasks to see the fs (File System) module in action below:
+
+How to create a directory using fs.mkdir()
+The fs.mkdir() function in Node.js is used to create a new directory. It takes two arguments: the path of 
+the directory to be created and an optional callback function that gets executed when the operation is 
+complete.
+
+path: Here, path refers to the location where you want to create a new folder. This can be an absolute or a 
+relative path. In my case, the path to the present working directory (the folder I am currently in), is: C:
+\Desktop\NodeJSTut. So, Let's create a folder in the NodeJSTut directory called myFolder.
+callback function: The purpose of the callback function is to notify that the directory creation process 
+has completed. This is necessary because the fs.mkdir() function is asynchronous, meaning that it does not 
+block the execution of the rest of the code while the operation is in progress. Instead, it immediately 
+returns control to the callback function, allowing it to continue executing other tasks. Once the directory 
+has been created, the callback function is called with an error object (if any) and any other relevant data 
+related to the operation. In the below code, we are just using it to display a success message in the 
+console or any error.
+// Import fs module
+const fs = require('fs');
+
+// Present Working Directory: C:\Desktop\NodeJSTut
+// Making a new directory called ./myFolder:
+
+fs.mkdir('./myFolder', (err) => {
+    if(err){
+        console.log(err);
+    } else{
+        console.log('Folder Created Successfully');
+    }
+})
+
+How to create and write to a file asynchronously using fs.writeFile()
+After the myFolder directory is created successfully, it's time to create a file and write something to it 
+by using the fs module.
+
+There are basically 2 ways of doing this:
+
+Synchronous Approach: In this approach, we create a file and write the data to it in a blocking manner, 
+which means that NodeJS waits for the creation and write operation to complete before moving on to the next 
+line of code. If an error occurs during this process, it throws an exception that must be caught using 
+try...catch.
+Asynchronous Approach: In this approach, we create and write data to a file in a non-blocking manner, which 
+means that NodeJS does not wait for the write operation to complete before moving on to the next line of 
+code. Instead, it takes a callback function that gets called once the entire process is completed. If an e
+rror occurs during the write operation, the error object is passed to the callback function
+
+writeFile() is a method provided by the fs (file system) module in Node.js. It is used to write data to a 
+file asynchronously. The method takes three arguments:
+
+The path of the file to write to (including the file name and extension)
+The data to write to the file (as a string or buffer)
+An optional callback function that is called once the write operation is complete or an error occurs during 
+the write operation.
+When writeFile() is called, Node.js creates a new file or overwrites an existing file at the specified path.
+ It then writes the provided data to the file and closes it. Since the method is asynchronous, the write 
+ operation does not block the event loop, allowing other operations to be performed in the meantime.
+
+Below is the code where we create a new file called myFile.txt in the myFolder directory and write this 
+data to it: Hi,this is newFile.txt.
+
+const fs = require('fs');
+
+const data = "Hi,this is newFile.txt";
+
+fs.writeFile('./myFolder/myFile.txt', data, (err)=> {
+    if(err){
+        console.log(err);
+        return;
+    } else {
+        console.log('Writen to file successfully!');
+    }
+})
+Since newFile.txt didn't exist previously, Hence the writeFile() function created this file for us on the 
+provided path and then wrote the value in the data variable to the file. Suppose this file already existed. 
+In that case, writeFile() will just open the file, erase all the existing text present in it and then write 
+the data to it.
+
+The problem with this code is: when you run the same code multiple times, it erases the previous data that 
+is already present in newFile.txt and writes the data to it.
+
+In case you do not want the original data to get deleted and just want the new data to be added/appended at 
+the end of the file, you need to make a little change in the above code by adding this "options object": 
+{flag: 'a'} as the third parameter to writeFile() – like this:
+
+const fs = require('fs');
+
+const data = 'Hi,this is newFile.txt';
+
+fs.writeFile('./myFolder/myFile.txt', data, {flag: 'a'}, (err) => {
+    if(err){
+        console.log(err);
+        return;
+    } else {
+        console.log('Writen to file successfully!');
+    }
+})
+Once you run the above code again and again, you will see that the myFile.txt has the value of the data 
+variable written to it multiple times. This is because the object (3rd parameter): {flag: 'a'} indicates 
+the writeFile() method to append the data at the end of the file instead of erasing the previous data 
+present in it.
+
+How to read a file asynchronously using fs.readFile()
+After creating and writing to the file, it's time we learn how to read the data present in the file using 
+the fs module.
+
+Again there are 2 ways of doing this: Synchronous approach and the Asynchronous approach (just like the 
+previous function). Here we are going to use the readFile() function provided by fs module which performs 
+the reading operation asynchronously.
+
+The readFile() function takes 3 parameters:
+
+The path to the file which is to be read.
+The encoding of the file.
+The callback function that gets executed once the reading operation is completed or if any error occurs 
+during the reading operation. It accepts 2 parameters: first parameter stores the file data 
+(if read operation is successful) and the second parameter stores the error object (if read operation fails 
+due to some error).
+The readFile() function is very intuitive and once called, it reads the data present in the provided file 
+according to the given encoding. If the read operation is successful, it returns the data to the callback 
+function and if not, it will return the error occurred.
+
+In the below code, we read the contents of the file - myFile.txt which we had created while learning the 
+previous function and then log the data stored in it in the console.
+
+const fs = require('fs');
+
+fs.readFile('./myFolder/myFile.txt', {encoding: 'utf-8'}, (err, data) => {
+    if(err){
+        console.log(err);
+        return;
+    } else {
+        console.log('File read successfully! Here is the data');
+        console.log(data);
+    }
+})
+It is to be noted here that the encoding property is set to 'utf-8'. At this point, some of you may not 
+know about the encoding property, So Let's understand it in a bit more detail:
+
+The encoding parameter in the fs.readFile() method of Node.js is used to specify the character encoding 
+used to interpret the file data. By default, if no encoding parameter is provided, the method returns a raw 
+buffer.
+
+If the readFile() method is called without providing an encoding parameter, you will see a result similar 
+to this printed in the console:
+
+<Buffer 54 68 69 73 20 69 73 20 73 6f 6d 65 20 64 61 74 61 20 69 6e 20 61 20 66 69 6c 65>
+This raw buffer is difficult to read and interpret as it represents the contents of the file in binary form.
+ To convert the buffer to a readable string, you can specify an encoding parameter when calling readFile().
+
+In our case, we specified the 'utf8' encoding as the second parameter of the readFile() method. This tells 
+Node.js to interpret the file contents as a string using the UTF-8 character encoding, thus you see the 
+original data printed in the console. Other common encodings that can be used with readFile() include:
+
+'ascii': Interpret the file contents as ASCII-encoded text.
+'utf16le': Interpret the file contents as 16-bit Unicode text in little-endian byte order.
+'latin1': Interpret the file contents as ISO-8859-1 (also known as Latin-1) encoded text.
+
+
+The fs.rename() method in Node.js is used to rename a file or directory. The method takes two arguments, the 
+current file path and the new file path, and a callback function that is executed when the renaming is 
+complete.
+
+Here's the syntax for the fs.rename() method:
+
+fs.rename(oldPath, newPath, callback);
+where:
+
+oldPath (string) - The current file path
+newPath (string) - The new file path
+callback (function) - A callback function to be executed when the renaming is complete. This function takes 
+an error object as its only parameter.
+
+Let's rename the newFile.txt file to newFileAsync.txt:
+
+const fs = require('fs');
+
+fs.rename('./newFolder/newFile.txt', './newFolder/newFileAsync.txt', (err)=>{
+    if(err){
+        console.log(err);
+        return;
+    }
+    console.log('File renamed successfully!')
+})
+Once you run the above code, you will see that the newFile.txt gets renamed to newFileAsync.txt.
+
+Note that you should only provide valid paths (absolute or relative) to the rename() function and not just 
+the names of the files. Remember it's oldPath and newPath and NOT oldName and newName.
+
+For example, consider this code: fs.rename('./newFolder/newFile.txt', 'newFileAsync.txt', ...rest of the 
+code). In this case, since we did not provide a proper path in the 2nd parameter, rename() assumes that the 
+path to the newly named file should be: ./newFileAsync.txt. Thus, it basically removes the newFile.txt from 
+the newFolder directory, renames the file to newFileAsync.txt and moves it to the current working directory.
