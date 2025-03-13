@@ -41,3 +41,28 @@ const fs = require('fs');
     //             console.log('Folder deleted...');
     //     });
     // }
+    // const newData = "this is my new file-2";
+    // fs.writeFile('./docu/file-2.txt', newData, () => {
+    //     console.log('File written to...');
+    // });
+
+    // renaming files
+    // fs.rename('./docu/file-2.txt', './docu/file-1.txt', (err) => {
+    //     if(err){
+    //         console.log(err);
+    //     }
+    //     console.log('File renamed');
+    // });
+
+    // deleting files
+    if(fs.existsSync('./docu/file-1.txt')){
+        fs.unlink('./docu/file-1.txt', (err) => {
+            if(err){
+                console.log(err);
+            }
+            console.log('File deleted successfully.');
+        });
+    }
+    else{
+        console.log('File does not exist');
+    }

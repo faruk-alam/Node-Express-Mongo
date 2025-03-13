@@ -522,3 +522,22 @@ For example, consider this code: fs.rename('./newFolder/newFile.txt', 'newFileAs
 code). In this case, since we did not provide a proper path in the 2nd parameter, rename() assumes that the 
 path to the newly named file should be: ./newFileAsync.txt. Thus, it basically removes the newFile.txt from 
 the newFolder directory, renames the file to newFileAsync.txt and moves it to the current working directory.
+
+How to delete a file using fs.unlink()?
+Last but not the least, we have the fs.unlink() function which is used to delete a file. It takes in 2 
+parameters:
+
+The path of the file which you want to delete, and
+The callback function which gets executed once the delete operation is over or if any error occurs during 
+the operation.
+Running the following code deletes the newFileSync.txt file present in the myFolder directory:
+
+const fs = require('fs');
+
+fs.unlink('./myFolder/myFileSync.txt', (err) => {
+    if(err){
+        console.log(err);
+        return;
+    }
+    console.log('File Deleted Successfully!')
+})
