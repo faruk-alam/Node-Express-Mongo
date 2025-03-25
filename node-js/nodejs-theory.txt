@@ -657,6 +657,127 @@ server.listen(5000, () => {
     console.log('Server listening at port 5000');
 })
 
+There is a simple way to fix this: there's a property called url in the req object which gives the URL of 
+the request or in other words it tells you about the resource the client is trying to access.
+
+Suppose if I type in: http://localhost:5000/about in my web browser's search bar, this means I am performing 
+a GET Request on the server and I am trying to access the /about page. So In this case the value of req.url 
+will be /about.
+
+Similarly for the below requests, the value of req.url will be:
+
+URL	req.url
+http://localhost:5000	/
+http://localhost:5000/about	/about
+http://localhost:5000/contact	/contact
+http://localhost:5000/error	/error
+
+We can use some conditionals if...else along with the req.url property to make our server respond to 
+different requests differently. This is how we can achieve this:
+
+const http = require('http');
+
+const server = http.createServer((req, res) => {
+    if(req.url === '/'){
+        res.end('This is my Home Page');
+    } else if(req.url === '/about'){
+        res.end('This is my About Page');
+    } else if(req.url === '/contact'){
+        res.end('This is my Contact Page');
+    } else {
+        res.end('404, Resource Not Found');
+    }
+})
+
+server.listen(5000, () => {
+    console.log('Server listening at port 5000');
+})
+
+Now we have a perfect server that responds to different requests differently. We are sending back responses 
+using a method called res.end(). But there is an even better way of sending back a response in which we can 
+add on 2 more methods along with res.end():
+
+res.writeHead() – This method is used to send the response headers to the client. The status code and 
+headers like content-type can be set using this method.
+res.write() – This method is used to send the response body to the client.
+res.end() – This method is used to end the response process.
+Below is the modified code where we added the writeHead() and write() methods along with end() method:
+
+const http = require('http');
+
+const server = http.createServer((req, res) => {
+    if(req.url === '/'){
+        res.writeHead(200, {'content-type': 'text/html'});
+        res.write('<h1>Home Page</h1>');
+        res.end();
+    } else if(req.url === '/about'){
+        res.writeHead(200, {'content-type': 'text/html'});
+        res.write('<h1>About Page</h1>');
+        res.end();
+    } else if(req.url === '/contact'){
+        res.writeHead(200, {'content-type': 'text/html'});
+        res.write('<h1>Contact Page</h1>');
+        res.end();
+    } else {
+        res.writeHead(404, {'content-type': 'text/html'});
+        res.write('<h1>404, Resource Not Found <a href="/">Go Back Home</a></h1>');
+        res.end();
+    }
+})
+
+server.listen(5000, () => {
+    console.log('Server listening at port 5000')
+})
+
+redirecting
+In Node.js, we can redirect a user to a different URL using the res.writeHead() method with the 301 or 302 
+status code. The 301 status code is used to indicate that the resource has been permanently moved to a new 
+location, while the 302 status code is used to indicate that the resource has been temporarily moved to a new 
+location.
+
+Here's an example of how to redirect a user to a different URL using Node.js:
+
+const http = require('http');
+
+const server = http.createServer((req, res) => {
+    if(req.url === '/'){
+        res.writeHead(301, {'Location': '/about'});
+        res.end();
+    } else if(req.url === '/about'){
+        res.writeHead(301, {'Location': '/contact'});
+        res.end();
+    } else if(req.url === '/contact'){
+        res.writeHead(301, {'Location': '/'});
+        res.end();
+    } else {
+        res.writeHead(404, {'content-type': 'text/html'});
+        res.write('<h1>404, Resource Not Found <a href="/">Go Back Home</a></h1>');
+        res.end();
+    }
+})
+
+server.listen(5000, () => {
+    console.log('Server listening at port 5000')
+})
+
+
+How to use nodemon package 
+nodemon is a package that helps us to restart our server whenever we make any changes in our code. It is a 
+command line tool that can be installed globally using npm.
+
+To install nodemon globally, run the following command in your terminal:
+
+npm install -g nodemon
+Once installed, you can start your server using nodemon by running the following command:
+
+nodemon <file name>
+
+This will start your server and whenever you make any changes in your code, nodemon will automatically 
+restart your server.
+
+
+How to use Express package
+
 
 
 
