@@ -1,0 +1,214 @@
+What is Express?
+Express is a Web Framework built upon Node.js.
+Node.js is an amazing tool for building networking services and applications. It's Open Source, free, easy 
+to extend, and very performant.
+Express is the most popular Node.js framework because it requires minimum setup to start an application or 
+an API and is fast, and unopinionated at the same time. In other words, it does not enforces its own 
+philosophy that a application or API should be built in a specific way, unlike Rails and Django. Its 
+flexibility can be calculated by the number of npm modules available which makes it pluggable at the same 
+time. If you have basic knowledge of HTML, CSS, and JavaScript and how Node.js works in general, in no time 
+you will be able to get started with Express.
+
+Express was developed by TJ Holowaychuk and is now maintained by Node.js foundation and open source 
+developers.
+
+
+Before we start with mechanism of using Express as the backend framework, let us first explore why we should 
+consider it using or the reasons of its popularity.
+
+1.Express lets you build single page, multi-page, and hybrid web and mobile applications. Other common backend 
+use is to provide an API for a client (whether web or mobile).
+2.It comes with a default template engine, Jade which helps to facilitate the flow of data into a website 
+structure and does support other template engines.
+3.It supports MVC (Model-View-Controller), a very common architecture to design web applications.
+4.It is cross-platform and is not limited to any particular operating system.
+5.It leverages upon Node.js single threaded and asynchronous model.
+
+
+You can install Express into any project with npm.
+
+If you're in an empty folder, first create a new Node.js project with this command:
+
+npm init -y
+then run this:
+
+npm install express --save
+to install Express into the project.
+
+The First "Hello, World" Example
+The first example we're going to create is a simple Express Web Server.
+
+Copy this code:
+
+const express = require('express')
+const app = express()
+
+app.get('/', (req, res) => res.send('Hello World!'))
+app.listen(3000, () => console.log('Server ready'))
+Save this to an index.js file in your project root folder, and start the server using this command:
+
+node index.js
+You can open the browser to port 3000 on localhost and you should see the Hello World! message.
+
+Those 4 lines of code do a lot behind the scenes.
+
+First, we import the express package to the express value.
+
+We instantiate an application by calling the express() method.
+
+Once we have the application object, we tell it to listen for GET requests on the / path, using the get() 
+method.
+
+There is a method for every HTTP verb: get(), post(), put(), delete(), and patch():
+
+app.get('/', (req, res) => { /* */ })
+app.post('/', (req, res) => { /* */ })
+app.put('/', (req, res) => { /* */ })
+app.delete('/', (req, res) => { /* */ })
+app.patch('/', (req, res) => { /* */ })
+Those methods accept a callback function – which is called when a request is started – and we need to 
+handle it.
+
+We pass in an arrow function:
+
+(req, res) => res.send('Hello World!')
+Express sends us two objects in this callback, which we called req and res. They represent the Request and 
+the Response objects.
+
+Request and Response
+Request is the HTTP request. It gives us all the request information, including the request parameters, 
+the headers, the body of the request, and more.
+
+Response is the HTTP response object that we'll send to the client.
+What we do in this callback is send the 'Hello World!' string to the client, using the Response.send() 
+method.
+
+This method sets that string as the body, and it closes the connection.
+
+The last line of the example actually starts the server, and tells it to listen on port 3000. We pass in a 
+callback that is called when the server is ready to accept new requests.
+
+
+Value	Description
+domain	The cookie domain name
+expires	Set the cookie expiration date. If missing, or 0, the cookie is a session cookie
+httpOnly	Set the cookie to be accessible only by the web server. See HttpOnly
+maxAge	Set the expiry time relative to the current time, expressed in milliseconds
+path	The cookie path. Defaults to '/'
+secure	Marks the cookie HTTPS only
+signed	Set the cookie to be signed
+sameSite	Value of SameSite
+A cookie can be cleared with:
+
+res.clearCookie('username')
+How to Work with HTTP Headers
+How to access HTTP headers values from a request
+You can access all the HTTP headers using the Request.headers property:
+
+app.get('/', (req, res) => {
+  console.log(req.headers)
+})
+Use the Request.header() method to access one individual request header's value:
+
+app.get('/', (req, res) => {
+  req.header('User-Agent')
+})
+How to change any HTTP header value for a response
+You can change any HTTP header value using Response.set():
+
+res.set('Content-Type', 'text/html')
+There is a shortcut for the Content-Type header, however:
+
+res.type('.html')
+// => 'text/html'
+
+res.type('html')
+// => 'text/html'
+
+res.type('json')
+// => 'application/json'
+
+res.type('application/json')
+// => 'application/json'
+
+res.type('png')
+// => image/png:
+How to Handle Redirects
+Redirects are common in Web Development. You can create a redirect using the Response.redirect() method:
+
+res.redirect('/go-there')
+This creates a 302 redirect.
+
+A 301 redirect is made in this way:
+
+res.redirect(301, '/go-there')
+
+Value	Description
+domain	The cookie domain name
+expires	Set the cookie expiration date. If missing, or 0, the cookie is a session cookie
+httpOnly	Set the cookie to be accessible only by the web server. See HttpOnly
+maxAge	Set the expiry time relative to the current time, expressed in milliseconds
+path	The cookie path. Defaults to '/'
+secure	Marks the cookie HTTPS only
+signed	Set the cookie to be signed
+sameSite	Value of SameSite
+A cookie can be cleared with:
+
+res.clearCookie('username')
+How to Work with HTTP Headers
+How to access HTTP headers values from a request
+You can access all the HTTP headers using the Request.headers property:
+
+app.get('/', (req, res) => {
+  console.log(req.headers)
+})
+Use the Request.header() method to access one individual request header's value:
+
+app.get('/', (req, res) => {
+  req.header('User-Agent')
+})
+How to change any HTTP header value for a response
+You can change any HTTP header value using Response.set():
+
+res.set('Content-Type', 'text/html')
+There is a shortcut for the Content-Type header, however:
+
+res.type('.html')
+// => 'text/html'
+
+res.type('html')
+// => 'text/html'
+
+res.type('json')
+// => 'application/json'
+
+res.type('application/json')
+// => 'application/json'
+
+res.type('png')
+// => image/png:
+Routing in Express
+Routing is the process of determining what should happen when a URL is called, or also which parts of the 
+application should handle a specific incoming request.
+
+In the Hello World example we used this code:
+
+app.get('/', (req, res) => { /* */ })
+This creates a route that maps accessing the root domain URL / using the HTTP GET method to the response we 
+want to provide.
+
+Named parameters
+What if we want to listen for custom requests? Maybe we want to create a service that accepts a string and 
+returns it as uppercase – and we don't want the parameter to be sent as a query string, but as part of the 
+URL. In a case like that, we use named parameters:
+
+app.get('/uppercase/:theValue', (req, res) => res.send(req.params.theValue.toUpperCase()))
+If we send a request to /uppercase/test, we'll get TEST in the body of the response.
+
+You can use multiple named parameters in the same URL, and they will all be stored in req.params.
+
+How to use a regular expression to match a path
+You can use regular expressions to match multiple paths with one statement:
+
+app.get(/post/, (req, res) => { /* */ })
+will match /post, /post/first, /thepost, /posting/something, and so on.
