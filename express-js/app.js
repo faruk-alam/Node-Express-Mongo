@@ -2,6 +2,8 @@ const express = require('express');
 const app = express();
 const morgan = require('morgan');
 
+const dbURL = 'mongodb+srv://node-express-mongo:node@cluster0.wh3af.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0'
+
 app.listen(3000, () => {
     console.log('Server is listening on port 3000');
 })
